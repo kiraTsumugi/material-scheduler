@@ -1,0 +1,122 @@
+{
+  "case": "hard_conflict",
+  "description": "硬性要求冲突：20:00 被占且 level=hard，不擅自改",
+  "material_id": "M05",
+  "requested_time": "20:00",
+  "model_mode": "offline-mock",
+  "status": "needs_confirm",
+  "pending": [
+    "请求时段 20:00 被 M88 占用，且为硬性要求，请确认是否调整"
+  ],
+  "final": {
+    "action": "finish",
+    "status": "needs_confirm",
+    "reason": "硬性要求时段 20:00 已被占用，无权更改，需用户确认",
+    "pending": [
+      "请求时段 20:00 被 M88 占用，且为硬性要求，请确认是否调整"
+    ]
+  },
+  "draft_count": 0,
+  "trace": [
+    {
+      "n": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M05"
+      },
+      "reason": "先获取素材元数据",
+      "observation": {
+        "ok": true,
+        "material": {
+          "id": "M05",
+          "title": "品牌联名发布",
+          "date": "2026-11-01",
+          "metadata": {
+            "type": "video",
+            "duration_sec": 30,
+            "category": "brand",
+            "tags": [
+              "brand"
+            ],
+            "copyright": "owned"
+          },
+          "publish_requirement": {
+            "time": "20:00",
+            "level": "hard"
+          },
+          "requested_by": "marketing"
+        }
+      }
+    },
+    {
+      "n": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M05"
+      },
+      "reason": "检查审核规则",
+      "observation": {
+        "ok": true,
+        "material_id": "M05",
+        "issues": [],
+        "blocked": false,
+        "has_missing": false,
+        "missing_fields": []
+      }
+    },
+    {
+      "n": 3,
+      "action": "query_slots",
+      "args": {
+        "date": "2026-11-01"
+      },
+      "reason": "查询目标日期可用时段",
+      "observation": {
+        "ok": true,
+        "date": "2026-11-01",
+        "all_slots": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "12:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "18:00",
+          "19:00",
+          "20:00",
+          "21:00"
+        ],
+        "occupied": {
+          "12:00": "M77",
+          "18:00": "M99",
+          "20:00": "M88"
+        },
+        "available": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "19:00",
+          "21:00"
+        ]
+      }
+    },
+    {
+      "n": 4,
+      "action": "finish",
+      "args": {},
+      "reason": "硬性要求时段 20:00 已被占用，无权更改，需用户确认",
+      "observation": {
+        "finished": true,
+        "status": "needs_confirm"
+      }
+    }
+  ]
+}

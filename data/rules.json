@@ -1,0 +1,35 @@
+{
+  "_comment": "素材审核规则（合成数据）。severity=block 表示阻断发布；warn 表示风险提示。字段缺失由 exists 规则单独报告。",
+  "rules": [
+    {
+      "id": "R_DURATION",
+      "desc": "短视频时长不得超过 60 秒",
+      "field": "duration_sec",
+      "op": "le",
+      "value": 60,
+      "severity": "block"
+    },
+    {
+      "id": "R_COPYRIGHT",
+      "desc": "版权状态必须为 owned",
+      "field": "copyright",
+      "op": "eq",
+      "value": "owned",
+      "severity": "block"
+    },
+    {
+      "id": "R_CATEGORY",
+      "desc": "必须指定 category",
+      "field": "category",
+      "op": "exists",
+      "severity": "block"
+    },
+    {
+      "id": "R_TAGS",
+      "desc": "建议至少一个 tag",
+      "field": "tags",
+      "op": "nonempty",
+      "severity": "warn"
+    }
+  ]
+}

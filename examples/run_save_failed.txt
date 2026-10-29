@@ -1,0 +1,18 @@
+[model] offline-mock
+  step 1: read_material args={'material_id': 'M06'}  ← 先获取素材元数据
+           obs={"ok": true, "material": {"id": "M06", "title": "活动预告", "date": "2026-11-01", "metadata": {"type": "video", "duration_sec": 20, "category": "promo", "tags": ["e
+  step 2: check_rules args={'material_id': 'M06'}  ← 检查审核规则
+           obs={"ok": true, "material_id": "M06", "issues": [], "blocked": false, "has_missing": false, "missing_fields": []}
+  step 3: query_slots args={'date': '2026-11-01'}  ← 查询目标日期可用时段
+           obs={"ok": true, "date": "2026-11-01", "all_slots": ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21
+  step 4: save_draft args={'suggested_time': '14:00', 'status': 'ok'}  ← 请求时段 14:00 可用，保存草稿
+           obs={"ok": false, "error": "save_failed", "message": "后端存储返回错误，草稿未保存", "fingerprint": "bd058541b0547ba2"}
+  step 5: finish args={}  ← 草稿保存失败：后端存储返回错误，草稿未保存
+           obs={"finished": true, "status": "save_failed"}
+
+素材: M06
+状态: 保存失败
+决策依据: 草稿保存失败：后端存储返回错误，草稿未保存
+待确认项:
+  - 保存失败，请重试或联系后端
+保存结果: 失败 - 后端存储返回错误，草稿未保存

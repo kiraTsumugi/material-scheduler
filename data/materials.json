@@ -1,0 +1,83 @@
+{
+  "M01": {
+    "id": "M01",
+    "title": "秋日旅行 Vlog",
+    "date": "2026-11-01",
+    "metadata": {
+      "type": "video",
+      "duration_sec": 45,
+      "category": "travel",
+      "tags": ["travel", "autumn"],
+      "copyright": "owned"
+    },
+    "publish_requirement": { "time": "18:00", "level": "soft" },
+    "requested_by": "content_team"
+  },
+  "M02": {
+    "id": "M02",
+    "title": "产品开箱 60s",
+    "date": "2026-11-01",
+    "metadata": {
+      "type": "video",
+      "duration_sec": 58,
+      "category": "product",
+      "tags": ["unbox"],
+      "copyright": "owned"
+    },
+    "publish_requirement": { "time": "10:00", "level": "soft" },
+    "requested_by": "content_team"
+  },
+  "M03": {
+    "id": "M03",
+    "title": "用户投稿剪辑",
+    "date": "2026-11-01",
+    "metadata": {
+      "type": "video",
+      "tags": ["ugc"]
+    },
+    "publish_requirement": { "time": "15:00", "level": "soft" },
+    "requested_by": "content_team"
+  },
+  "M04": {
+    "id": "M04",
+    "title": "长视频合集",
+    "date": "2026-11-01",
+    "metadata": {
+      "type": "video",
+      "duration_sec": 180,
+      "category": "compilation",
+      "tags": ["long"],
+      "copyright": "owned"
+    },
+    "publish_requirement": { "time": "21:00", "level": "soft" },
+    "requested_by": "content_team"
+  },
+  "M05": {
+    "id": "M05",
+    "title": "品牌联名发布",
+    "date": "2026-11-01",
+    "metadata": {
+      "type": "video",
+      "duration_sec": 30,
+      "category": "brand",
+      "tags": ["brand"],
+      "copyright": "owned"
+    },
+    "publish_requirement": { "time": "20:00", "level": "hard" },
+    "requested_by": "marketing"
+  },
+  "M06": {
+    "id": "M06",
+    "title": "活动预告",
+    "date": "2026-11-01",
+    "metadata": {
+      "type": "video",
+      "duration_sec": 20,
+      "category": "promo",
+      "tags": ["event"],
+      "copyright": "owned"
+    },
+    "publish_requirement": { "time": "14:00", "level": "soft" },
+    "requested_by": "content_team"
+  }
+}

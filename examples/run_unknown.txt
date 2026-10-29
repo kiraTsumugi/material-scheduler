@@ -1,0 +1,12 @@
+[model] offline-mock
+  step 1: read_material args={'material_id': 'MX9'}  ← 先获取素材元数据
+           obs={"ok": false, "error": "not_found", "material_id": "MX9"}
+  step 2: finish args={}  ← 素材不存在，无法排期
+           obs={"finished": true, "status": "needs_more_info"}
+
+素材: MX9
+状态: 资料不足，待补充
+决策依据: 素材不存在，无法排期
+待确认项:
+  - 请确认素材 ID
+保存结果: 未保存草稿

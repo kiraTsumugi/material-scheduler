@@ -1,0 +1,14 @@
+[model] offline-mock
+  step 1: read_material args={'material_id': 'M04'}  ← 先获取素材元数据
+           obs={"ok": true, "material": {"id": "M04", "title": "长视频合集", "date": "2026-11-01", "metadata": {"type": "video", "duration_sec": 180, "category": "compilation", "ta
+  step 2: check_rules args={'material_id': 'M04'}  ← 检查审核规则
+           obs={"ok": true, "material_id": "M04", "issues": [{"rule_id": "R_DURATION", "desc": "短视频时长不得超过 60 秒", "severity": "block", "kind": "violation", "field": "duration_s
+  step 3: finish args={}  ← 存在阻断级规则风险：短视频时长不得超过 60 秒
+           obs={"finished": true, "status": "blocked"}
+
+素材: M04
+状态: 已阻断（规则违规）
+决策依据: 存在阻断级规则风险：短视频时长不得超过 60 秒
+待确认项:
+  - 短视频时长不得超过 60 秒
+保存结果: 未保存草稿

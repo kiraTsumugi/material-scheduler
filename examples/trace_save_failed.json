@@ -1,0 +1,137 @@
+{
+  "case": "save_failed",
+  "description": "保存失败：后端故障注入",
+  "material_id": "M06",
+  "requested_time": "14:00",
+  "model_mode": "offline-mock",
+  "status": "save_failed",
+  "pending": [
+    "保存失败，请重试或联系后端"
+  ],
+  "final": {
+    "action": "finish",
+    "status": "save_failed",
+    "reason": "草稿保存失败：后端存储返回错误，草稿未保存",
+    "pending": [
+      "保存失败，请重试或联系后端"
+    ]
+  },
+  "draft_count": 0,
+  "trace": [
+    {
+      "n": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M06"
+      },
+      "reason": "先获取素材元数据",
+      "observation": {
+        "ok": true,
+        "material": {
+          "id": "M06",
+          "title": "活动预告",
+          "date": "2026-11-01",
+          "metadata": {
+            "type": "video",
+            "duration_sec": 20,
+            "category": "promo",
+            "tags": [
+              "event"
+            ],
+            "copyright": "owned"
+          },
+          "publish_requirement": {
+            "time": "14:00",
+            "level": "soft"
+          },
+          "requested_by": "content_team"
+        }
+      }
+    },
+    {
+      "n": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M06"
+      },
+      "reason": "检查审核规则",
+      "observation": {
+        "ok": true,
+        "material_id": "M06",
+        "issues": [],
+        "blocked": false,
+        "has_missing": false,
+        "missing_fields": []
+      }
+    },
+    {
+      "n": 3,
+      "action": "query_slots",
+      "args": {
+        "date": "2026-11-01"
+      },
+      "reason": "查询目标日期可用时段",
+      "observation": {
+        "ok": true,
+        "date": "2026-11-01",
+        "all_slots": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "12:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "18:00",
+          "19:00",
+          "20:00",
+          "21:00"
+        ],
+        "occupied": {
+          "12:00": "M77",
+          "18:00": "M99",
+          "20:00": "M88"
+        },
+        "available": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "19:00",
+          "21:00"
+        ]
+      }
+    },
+    {
+      "n": 4,
+      "action": "save_draft",
+      "args": {
+        "suggested_time": "14:00",
+        "status": "ok"
+      },
+      "reason": "请求时段 14:00 可用，保存草稿",
+      "observation": {
+        "ok": false,
+        "error": "save_failed",
+        "message": "后端存储返回错误，草稿未保存",
+        "fingerprint": "bd058541b0547ba2"
+      }
+    },
+    {
+      "n": 5,
+      "action": "finish",
+      "args": {},
+      "reason": "草稿保存失败：后端存储返回错误，草稿未保存",
+      "observation": {
+        "finished": true,
+        "status": "save_failed"
+      }
+    }
+  ]
+}

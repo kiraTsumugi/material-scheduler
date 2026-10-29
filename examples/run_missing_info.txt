@@ -1,0 +1,14 @@
+[model] offline-mock
+  step 1: read_material args={'material_id': 'M03'}  ← 先获取素材元数据
+           obs={"ok": true, "material": {"id": "M03", "title": "用户投稿剪辑", "date": "2026-11-01", "metadata": {"type": "video", "tags": ["ugc"]}, "publish_requirement": {"time": 
+  step 2: check_rules args={'material_id': 'M03'}  ← 检查审核规则
+           obs={"ok": true, "material_id": "M03", "issues": [{"rule_id": "R_DURATION", "desc": "短视频时长不得超过 60 秒", "severity": "block", "kind": "missing", "field": "duration_sec
+  step 3: finish args={}  ← 素材信息缺失，无法完成审核：category、copyright、duration_sec
+           obs={"finished": true, "status": "needs_more_info"}
+
+素材: M03
+状态: 资料不足，待补充
+决策依据: 素材信息缺失，无法完成审核：category、copyright、duration_sec
+待确认项:
+  - 请补充素材字段：category、copyright、duration_sec
+保存结果: 未保存草稿

@@ -1,0 +1,87 @@
+{
+  "case": "rule_risk",
+  "description": "规则风险：时长 180s 超限，阻断",
+  "material_id": "M04",
+  "requested_time": null,
+  "model_mode": "offline-mock",
+  "status": "blocked",
+  "pending": [
+    "短视频时长不得超过 60 秒"
+  ],
+  "final": {
+    "action": "finish",
+    "status": "blocked",
+    "reason": "存在阻断级规则风险：短视频时长不得超过 60 秒",
+    "pending": [
+      "短视频时长不得超过 60 秒"
+    ]
+  },
+  "draft_count": 0,
+  "trace": [
+    {
+      "n": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M04"
+      },
+      "reason": "先获取素材元数据",
+      "observation": {
+        "ok": true,
+        "material": {
+          "id": "M04",
+          "title": "长视频合集",
+          "date": "2026-11-01",
+          "metadata": {
+            "type": "video",
+            "duration_sec": 180,
+            "category": "compilation",
+            "tags": [
+              "long"
+            ],
+            "copyright": "owned"
+          },
+          "publish_requirement": {
+            "time": "21:00",
+            "level": "soft"
+          },
+          "requested_by": "content_team"
+        }
+      }
+    },
+    {
+      "n": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M04"
+      },
+      "reason": "检查审核规则",
+      "observation": {
+        "ok": true,
+        "material_id": "M04",
+        "issues": [
+          {
+            "rule_id": "R_DURATION",
+            "desc": "短视频时长不得超过 60 秒",
+            "severity": "block",
+            "kind": "violation",
+            "field": "duration_sec",
+            "actual": 180
+          }
+        ],
+        "blocked": true,
+        "has_missing": false,
+        "missing_fields": []
+      }
+    },
+    {
+      "n": 3,
+      "action": "finish",
+      "args": {},
+      "reason": "存在阻断级规则风险：短视频时长不得超过 60 秒",
+      "observation": {
+        "finished": true,
+        "status": "blocked"
+      }
+    }
+  ]
+}

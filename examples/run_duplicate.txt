@@ -1,0 +1,18 @@
+[model] offline-mock
+  step 1: read_material args={'material_id': 'M01'}  ← 先获取素材元数据
+           obs={"ok": true, "material": {"id": "M01", "title": "秋日旅行 Vlog", "date": "2026-11-01", "metadata": {"type": "video", "duration_sec": 45, "category": "travel", "tags
+  step 2: check_rules args={'material_id': 'M01'}  ← 检查审核规则
+           obs={"ok": true, "material_id": "M01", "issues": [], "blocked": false, "has_missing": false, "missing_fields": []}
+  step 3: query_slots args={'date': '2026-11-01'}  ← 查询目标日期可用时段
+           obs={"ok": true, "date": "2026-11-01", "all_slots": ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21
+  step 4: save_draft args={'suggested_time': '19:00', 'status': 'conflict_resolved'}  ← 请求时段 18:00 被占用，改用可用时段 19:00，标记待确认
+           obs={"ok": true, "status": "draft_saved", "fingerprint": "4de8533c3e0ff11e", "message": "草稿已保存", "draft": {"material_id": "M01", "requested_time": "18:00", "suggest
+  step 5: finish args={}  ← 草稿已保存，但存在待用户确认项
+           obs={"finished": true, "status": "needs_confirm"}
+
+素材: M01
+状态: 待用户确认
+决策依据: 草稿已保存，但存在待用户确认项
+待确认项:
+  - 请求时段 18:00 被占用，已建议 19:00，待用户确认
+保存结果: draft_saved (草稿已保存)

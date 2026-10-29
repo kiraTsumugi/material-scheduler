@@ -1,0 +1,16 @@
+[model] offline-mock
+  step 1: read_material args={'material_id': 'M05'}  ← 先获取素材元数据
+           obs={"ok": true, "material": {"id": "M05", "title": "品牌联名发布", "date": "2026-11-01", "metadata": {"type": "video", "duration_sec": 30, "category": "brand", "tags": [
+  step 2: check_rules args={'material_id': 'M05'}  ← 检查审核规则
+           obs={"ok": true, "material_id": "M05", "issues": [], "blocked": false, "has_missing": false, "missing_fields": []}
+  step 3: query_slots args={'date': '2026-11-01'}  ← 查询目标日期可用时段
+           obs={"ok": true, "date": "2026-11-01", "all_slots": ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21
+  step 4: finish args={}  ← 硬性要求时段 20:00 已被占用，无权更改，需用户确认
+           obs={"finished": true, "status": "needs_confirm"}
+
+素材: M05
+状态: 待用户确认
+决策依据: 硬性要求时段 20:00 已被占用，无权更改，需用户确认
+待确认项:
+  - 请求时段 20:00 被 M88 占用，且为硬性要求，请确认是否调整
+保存结果: 未保存草稿

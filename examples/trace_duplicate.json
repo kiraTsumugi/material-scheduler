@@ -1,0 +1,147 @@
+{
+  "case": "duplicate",
+  "description": "重复提交：连跑两次只出一份草稿",
+  "material_id": "M01",
+  "requested_time": "18:00",
+  "model_mode": "offline-mock",
+  "status": "needs_confirm",
+  "pending": [
+    "请求时段 18:00 被占用，已建议 19:00，待用户确认"
+  ],
+  "final": {
+    "action": "finish",
+    "status": "needs_confirm",
+    "reason": "相同请求草稿已存在（幂等），未重复保存",
+    "pending": [
+      "请求时段 18:00 被占用，已建议 19:00，待用户确认"
+    ]
+  },
+  "draft_count": 1,
+  "trace": [
+    {
+      "n": 1,
+      "action": "read_material",
+      "args": {
+        "material_id": "M01"
+      },
+      "reason": "先获取素材元数据",
+      "observation": {
+        "ok": true,
+        "material": {
+          "id": "M01",
+          "title": "秋日旅行 Vlog",
+          "date": "2026-11-01",
+          "metadata": {
+            "type": "video",
+            "duration_sec": 45,
+            "category": "travel",
+            "tags": [
+              "travel",
+              "autumn"
+            ],
+            "copyright": "owned"
+          },
+          "publish_requirement": {
+            "time": "18:00",
+            "level": "soft"
+          },
+          "requested_by": "content_team"
+        }
+      }
+    },
+    {
+      "n": 2,
+      "action": "check_rules",
+      "args": {
+        "material_id": "M01"
+      },
+      "reason": "检查审核规则",
+      "observation": {
+        "ok": true,
+        "material_id": "M01",
+        "issues": [],
+        "blocked": false,
+        "has_missing": false,
+        "missing_fields": []
+      }
+    },
+    {
+      "n": 3,
+      "action": "query_slots",
+      "args": {
+        "date": "2026-11-01"
+      },
+      "reason": "查询目标日期可用时段",
+      "observation": {
+        "ok": true,
+        "date": "2026-11-01",
+        "all_slots": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "12:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "18:00",
+          "19:00",
+          "20:00",
+          "21:00"
+        ],
+        "occupied": {
+          "12:00": "M77",
+          "18:00": "M99",
+          "20:00": "M88"
+        },
+        "available": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "19:00",
+          "21:00"
+        ]
+      }
+    },
+    {
+      "n": 4,
+      "action": "save_draft",
+      "args": {
+        "suggested_time": "19:00",
+        "status": "conflict_resolved"
+      },
+      "reason": "请求时段 18:00 被占用，改用可用时段 19:00，标记待确认",
+      "observation": {
+        "ok": true,
+        "status": "duplicate",
+        "fingerprint": "4de8533c3e0ff11e",
+        "message": "相同请求已存在草稿，未重复保存",
+        "draft": {
+          "material_id": "M01",
+          "requested_time": "18:00",
+          "suggested_time": "19:00",
+          "status": "draft_saved",
+          "risk_summary": "",
+          "pending_confirmations": [],
+          "fingerprint": "4de8533c3e0ff11e"
+        }
+      }
+    },
+    {
+      "n": 5,
+      "action": "finish",
+      "args": {},
+      "reason": "相同请求草稿已存在（幂等），未重复保存",
+      "observation": {
+        "finished": true,
+        "status": "needs_confirm"
+      }
+    }
+  ]
+}

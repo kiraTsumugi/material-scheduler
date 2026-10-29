@@ -2,7 +2,7 @@
 
 ## 测试预期 vs 实际结果
 
-全部测试：`python -m unittest discover -s tests -v` → **11 passed**。
+全部测试：`python -m unittest discover -s tests -v` → **14 passed**。
 
 | 用例 | 预期 | 实际 | 证据文件 |
 |---|---|---|---|
@@ -14,6 +14,7 @@
 | 保存失败 M06@14:00 | `save_failed`，0 份草稿 | ✅ | `examples/trace_save_failed.json` |
 | 素材不存在 MX9 | `needs_more_info` | ✅ | `examples/trace_unknown.json` |
 | 重复提交 M01@18:00 ×2 | 只 1 份草稿 | ✅ | `examples/trace_duplicate.json` |
+| 畸形模型输出（非 dict / 未知动作 / 绕过读素材） | 不崩溃，优雅失败 | ✅ | `tests/test_agent.py::TestMalformedModelOutput` |
 
 ## ReAct 决策证据
 
@@ -35,6 +36,19 @@ step5 finish(needs_confirm) ← 有待确认项，收尾为待确认（非"已�
 `python examples/verify_live_path.py` 启动本地 OpenAI 兼容 mock server，验证
 `_call_live` 的 HTTP 契约（payload / Bearer 鉴权 / response_format / JSON 解析）：
 → **通过**。说明 live 路径可跑，非纸面代码。
+
+## 鲁棒性（真实模型接入的崩溃点修复）
+
+在回归中发现三个"纸面 Mock 跑不出、真实 LLM 会踩"的崩溃点，已修复并加测试固化：
+
+1. **模型返回非 dict**（JSON 解析失败/纯文本）原会 `AttributeError` 崩溃
+   → 改为契约校验，把错误作为观察喂回令模型自纠，不崩溃。
+2. **未知 action** 原会静默循环到步数上限、丢失中间轨迹
+   → 改为喂回 `unknown_action` 错误并保留完整 trace。
+3. **未经 read_material 直接 save_draft** 原会 `RuntimeError`
+   → 改为返回 `material_not_loaded` 观察令模型自纠。
+
+对应测试：`tests/test_agent.py::TestMalformedModelOutput`（3 项）。
 
 ## 失败与限制
 

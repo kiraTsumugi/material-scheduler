@@ -70,8 +70,21 @@ def run(material_id: str, requested_time: str | None = None,
 
     for step_no in range(1, MAX_STEPS + 1):
         action = model.decide(SYSTEM_PROMPT, messages)
+
+        # 契约校验：真实模型可能返回非 dict（解析失败/纯文本）。
+        # 不崩溃——把错误作为观察喂回，让模型自我纠正。
+        if not isinstance(action, dict):
+            step = Step(n=step_no, action="<invalid>", args={},
+                        reason="模型返回非结构化输出",
+                        observation={"error": "invalid_action", "got": str(action)[:120]})
+            trace.append(step)
+            messages.append({"role": "user", "content": json.dumps(
+                {"error": "invalid_action",
+                 "hint": "请只输出一个 JSON 动作对象"}, ensure_ascii=False)})
+            continue
+
         name = action.get("action", "")
-        args = action.get("args", {})
+        args = action.get("args", {}) or {}
         reason = action.get("reason", "")
         step = Step(n=step_no, action=name, args=args, reason=reason)
 
@@ -90,9 +103,17 @@ def run(material_id: str, requested_time: str | None = None,
             trace.append(step)
             messages.append({"role": "assistant", "content": json.dumps(action)})
             messages.append({"role": "user", "content": json.dumps(obs, ensure_ascii=False)})
-            # 存草稿后，让模型收尾（把保存结果交给模型判断）
             if name == "save_draft":
                 continue
+            continue
+
+        # 未知动作：喂回错误，让模型重选（而非静默循环）
+        step.observation = {"error": "unknown_action", "action": name,
+                            "valid": sorted(TOOL_ACTIONS | {"finish"})}
+        trace.append(step)
+        messages.append({"role": "user", "content": json.dumps(
+            {"error": "unknown_action", "action": name,
+             "hint": "请从合法动作中重选"}, ensure_ascii=False)})
 
     # 超过步数上限
     trace.append(Step(n=MAX_STEPS + 1, action="abort",
@@ -116,8 +137,12 @@ def _dispatch(tools: Tools, name: str, args: dict, material_id: str,
     if name == "query_slots":
         return tools.query_slots(args.get("date", ""))
     if name == "save_draft":
-        # 需要素材的 requested_time 作为幂等键——从历史事实里取
-        mat = _latest_material(messages, material_id, requested_time)
+        # 需要素材的 requested_time 作为幂等键——从历史事实里取。
+        # 若模型绕过 read_material 直接保存，返回错误观察令其自纠，而非崩溃。
+        mat = _latest_material(messages, requested_time)
+        if mat is None:
+            return {"ok": False, "error": "material_not_loaded",
+                    "message": "保存前必须先调用 read_material 获取素材"}
         draft = Draft(
             material_id=mat["id"],
             requested_time=mat["publish_requirement"]["time"],
@@ -130,12 +155,9 @@ def _dispatch(tools: Tools, name: str, args: dict, material_id: str,
     return {"ok": False, "error": "unknown_action", "action": name}
 
 
-def _latest_material(messages: list[dict], material_id: str,
-                     requested_time: str | None) -> dict:
-    """从对话历史里取最近一次 read_material 的观察结果。
-
-    调用 save_draft 前必然已 read_material（循环保证），故历史里一定有。
-    """
+def _latest_material(messages: list[dict],
+                     requested_time: str | None) -> dict | None:
+    """从对话历史里取最近一次 read_material 的观察结果。找不到返回 None。"""
     for m in reversed(messages):
         try:
             obs = json.loads(m.get("content", ""))
@@ -146,4 +168,4 @@ def _latest_material(messages: list[dict], material_id: str,
             if requested_time:
                 mat["publish_requirement"]["time"] = requested_time
             return mat
-    raise RuntimeError("save_draft 前未获取素材，循环不变量被破坏")
+    return None

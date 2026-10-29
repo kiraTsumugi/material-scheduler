@@ -109,5 +109,40 @@ class TestStepLimit(unittest.TestCase):
         self.assertLessEqual(len([s for s in r.trace if s.action != "abort"]), MAX_STEPS)
 
 
+class TestMalformedModelOutput(unittest.TestCase):
+    """真实模型可能返回非预期输出；循环必须不崩溃、不静默丢步。"""
+
+    def test_unknown_action_does_not_crash(self):
+        class M:
+            mode = "bad"
+
+            def decide(self, s, m):
+                return {"action": "teleport", "args": {}}
+
+        r = run("M01", model=M(), tools=Tools(DraftStore()))
+        self.assertEqual(r.status, "incomplete")
+        self.assertTrue(len(r.trace) >= 2)  # 有轨迹，非静默
+
+    def test_non_dict_action_does_not_crash(self):
+        class M:
+            mode = "bad"
+
+            def decide(self, s, m):
+                return "this is not a dict"
+
+        r = run("M01", model=M(), tools=Tools(DraftStore()))
+        self.assertEqual(r.status, "incomplete")
+
+    def test_save_before_read_does_not_crash(self):
+        class M:
+            mode = "bad"
+
+            def decide(self, s, m):
+                return {"action": "save_draft", "args": {"suggested_time": "10:00"}}
+
+        r = run("M02", model=M(), tools=Tools(DraftStore()))
+        self.assertEqual(r.status, "incomplete")  # 优雅失败，非异常
+
+
 if __name__ == "__main__":
     unittest.main()

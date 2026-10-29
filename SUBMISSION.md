@@ -7,11 +7,16 @@
 | 题号 | 素材审核与发布排期 Agent（项目题四选一） |
 | GitHub URL | https://github.com/kiraTsumugi/material-scheduler |
 | 分支 | `main` |
-| 最终 commit SHA | `cdbe40efb908cf68ea7712066ccfcc7639ca2c7f` |
+| 交付 tag | `submission-v1` |
 | 运行方式 | CLI |
 | 依赖 | 零第三方依赖，Python ≥ 3.10 |
 
-> 若后续对 commit 做了 `amend`（如改作者身份）或新增提交，请回填上表的 **SHA**。
+> **关于 commit SHA**：本文件被写入最终提交中，故无法在文件内记录它自身的 SHA（自引用）。
+> 请以 git tag `submission-v1` 指向的提交为交付版本，精确 SHA 见随仓库提交的交付消息：
+>
+> ```bash
+> git rev-list -n1 submission-v1      # 取 tag 指向的 commit SHA
+> ```
 
 ## 一句话概述
 
